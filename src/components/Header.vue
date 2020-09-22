@@ -5,7 +5,6 @@
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
           <img
             src="https://e7.pngegg.com/pngimages/609/174/png-clipart-shadowrun-dragonfall-shadowrun-returns-logo-emblem-others-emblem-logo.png"
-            alt="Lightweight UI components for Vue.js based on Bulma"
           />
           <!-- <ul>
             <li v-for="character in characters" v-bind:key="character.id">{{character.name}}</li>
@@ -93,7 +92,7 @@
       <h1>Characters</h1>
       <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} AGL:{{character.AGL}} WILL:{{character.WILL}} LOG:{{character.LOG}} CHA:{{character.CHA}} EDG:{{character.EDG}} ID:{{character.id}} <button v-bind:id="character.id" v-on:click="() => {editSelect(character.id, character.name, character.STR, character.AGL, character.WILL, character.LOG, character.CHA, character.EDG)}">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
       <h1>ShadowAmps</h1>
-      <li v-for="shadowamp in shadowamps" v-bind:key="shadowamp.id">Name:{{shadowamp.name}} Description:{{shadowamp.description}}}</li>
+      <li v-for="shadowamp in shadowamps" v-bind:key="shadowamp.id">Name:{{shadowamp.name}} Description:{{shadowamp.description}}</li>
     </ul>
     <div class="form">
       <h1>New Character</h1>
