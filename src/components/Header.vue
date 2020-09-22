@@ -258,7 +258,7 @@
           // user: this.$URL +"users/"+"1"+"/"
         }
         fetch(`${this.$URL}characters/${this.characterID}`, {
-          method: "PUT",
+          method: "PATCH",
           body: JSON.stringify(character),
           headers: {
               "Authorization": `JWT ${this.token}`,
