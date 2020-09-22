@@ -7,6 +7,9 @@
             src="https://e7.pngegg.com/pngimages/609/174/png-clipart-shadowrun-dragonfall-shadowrun-returns-logo-emblem-others-emblem-logo.png"
             alt="Lightweight UI components for Vue.js based on Bulma"
           />
+          <!-- <ul>
+            <li v-for="character in characters" v-bind:key="character.id">{{character.name}}</li>
+          </ul> -->
         </b-navbar-item>
       </template>
       <template slot="start">
@@ -41,7 +44,7 @@
       </template>
     </b-navbar>
      <section>
-    <b-modal
+      <b-modal
           v-model="isComponentModalActive"
           has-modal-card
           trap-focus
@@ -86,6 +89,9 @@
         </form>
       </b-modal>
     </section>
+    <ul>
+      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ShadowAmps{{character.ShadowAmp.name}}</li>
+    </ul>
   </div>
 </template>
 
@@ -100,6 +106,7 @@
         password: "",
         loggedin: "",
         token: "",
+        characters:[]
         // listname: "",
         // listoflists: [],
       }
@@ -135,7 +142,7 @@
             this.firstname = '',
             this.lastname='',
             this.email = ''
-            // this.populateLists()
+            this.populateCharacters()
           } else {
             alert('Incorrect Login')
           }
@@ -146,8 +153,7 @@
         this.token = '',
         this.username = '',
         this.password = '',
-        this.firstname = '',
-        this.listoflists = []
+        this.firstname = ''
       },
       register: function() {
         const user = {
@@ -184,8 +190,9 @@
           }
         })
       },
-      populateLists: function(){
-        fetch(`${this.$URL}auth/api/lists/`, {
+      populateCharacters: function(){
+        console.log(this.token)
+        fetch(`${this.$URL}characters/`, {
           method: "GET",
           headers: {
             "Authorization": `JWT ${this.token}`
@@ -203,9 +210,10 @@
         .then(data => {
           if (data){
             console.log("data: ", data)
-            this.listoflists = data
+            this.characters = data
+            // this.$emit(characters)
           } else {
-            console.log("No lists found for this user. Create a new list?")
+            console.log("No characters found for this user. Create a new character?")
           }
         })
       }
