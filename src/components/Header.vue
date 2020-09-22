@@ -90,7 +90,7 @@
       </b-modal>
     </section>
     <ul>
-      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editCharacter()">Edit</button></li>
+      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editCharacter()">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
     </ul>
     <div class="form">
       <h1>New Character</h1>
@@ -249,6 +249,20 @@
         })
         location.reload();
       },
+      deleteCharacter: function(id){
+          // const token = this.$route.query.tokens
+          //const = event.target.id
+           fetch(`${this.$URL}characters/${id}/`, {
+            method: 'delete',
+            headers: {
+                "Authorization": `JWT ${this.token}`,
+              "Content-Type":"application/json"
+            },
+        })
+          .then(() => {
+            this.populateCharacters()
+          })
+        },
       register: function() {
         const user = {
           username: this.username,
