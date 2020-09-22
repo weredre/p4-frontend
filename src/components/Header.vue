@@ -80,7 +80,7 @@
             </section>
             <footer class="modal-card-foot">
                 <button class="button" type="button" @click="isComponentModalActive=false">Close</button>
-                <button class="button is-primary" v-on:click="logIn()">Login</button>
+                <button class="button is-primary" v-on:click="logIn(),isComponentModalActive=false">Login</button>
             </footer>
           </div>
         </form>
@@ -134,8 +134,8 @@
             this.isComponentModalActive = false,
             this.firstname = '',
             this.lastname='',
-            this.email = '',
-            this.populateLists()
+            this.email = ''
+            // this.populateLists()
           } else {
             alert('Incorrect Login')
           }
