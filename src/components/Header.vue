@@ -91,7 +91,7 @@
     </section>
     <ul>
       <h1>Characters</h1>
-      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editinput = character.name">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
+      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} AGL:{{character.AGL}} WILL:{{character.WILL}} LOG:{{character.LOG}} CHA:{{character.CHA}} EDG:{{character.EDG}} ID:{{character.id}} <button v-bind:id="character.id" v-on:click="() => {editSelect(character.id, character.name, character.STR, character.AGL, character.WILL, character.LOG, character.CHA, character.EDG)}">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
       <h1>ShadowAmps</h1>
       <li v-for="shadowamp in shadowamps" v-bind:key="shadowamp.id">Name:{{shadowamp.name}} Description:{{shadowamp.description}}}</li>
     </ul>
@@ -131,7 +131,7 @@
 
       <input type=number EDG=EDG v-model="editEDGinput" placeholder="Edge"/>
 
-      <input type=number v-model="characterID" >
+
 
       <!-- <select name="wand" id="editselect">
       </select> -->
@@ -168,6 +168,7 @@
         editLOGinput: null,
         editCHAinput: null,
         editEDGinput: null,
+        editCharacterID: null,
         // user:{
         //   username:"",
         //   password:""
@@ -245,30 +246,37 @@
           this.populateCharacters()
         })
       },
-      editCharacter: function() {
-        const character = {
+      editSelect: function(id, name, STR, AGL, WILL, LOG, CHA, EDG) {
+      this.editCharacterID = id;
+      this.editnameInput = name;
+      this.editSTRinput = STR;
+      this.editAGLinput = AGL;
+      this.editWILinput = WILL;
+      this.editLOGinput = LOG;
+      this.editCHAinput = CHA;
+      this.editEDGinput = EDG;
+    },
+    editCharacter: function() {
+      const id = this.editCharacterID;
+      fetch(`${this.$URL}characters/${id}/`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `JWT ${this.token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
           name: this.editnameInput,
           STR: this.editSTRinput,
           AGL: this.editAGLinput,
           WILL: this.editWILinput,
           LOG: this.editLOGinput,
           CHA: this.editCHAinput,
-          EDG: this.editEDGinput,
-          // ShadowAmp: ["http://127.0.0.1:8000/shadowamps/2/"],
-          // user: this.$URL +"users/"+"1"+"/"
-        }
-        fetch(`${this.$URL}characters/${this.characterID}`, {
-          method: "PATCH",
-          body: JSON.stringify(character),
-          headers: {
-              "Authorization": `JWT ${this.token}`,
-              "Content-Type": "application/json",
-          }
+          EDG: this.editEDGinput
         })
-        .then(() => {
-          this.populateCharacters()
-        })
-      },
+      }).then(() => {
+        this.populateCharacters()
+      });
+    },
       deleteCharacter: function(id){
           // const token = this.$route.query.tokens
           //const = event.target.id
