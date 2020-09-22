@@ -90,7 +90,10 @@
       </b-modal>
     </section>
     <ul>
-      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editCharacter()">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
+      <h1>Characters</h1>
+      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editinput = character.name">Edit</button><button v-on:click="deleteCharacter(character.id)">Delete</button></li>
+      <h1>ShadowAmps</h1>
+      <li v-for="shadowamp in shadowamps" v-bind:key="shadowamp.id">Name:{{shadowamp.name}} Description:{{shadowamp.description}}}</li>
     </ul>
     <div class="form">
       <h1>New Character</h1>
@@ -113,7 +116,8 @@
     </div>
     <div class="form">
       <h1>Edit Character</h1>
-      <input type=text name=name v-model="editinput"/>
+      <input type=text v-model="editnameInput"/>
+
 
       <input type=number STR=STR v-model="editSTRinput" placeholder="Strength"/>
 
@@ -127,9 +131,11 @@
 
       <input type=number EDG=EDG v-model="editEDGinput" placeholder="Edge"/>
 
+      <input type=number v-model="characterID" >
+
       <!-- <select name="wand" id="editselect">
       </select> -->
-      <button id="editbutton">Edit</button>
+      <button v-on:click="editCharacter()">Edit</button>
   </div>
   </div>
 </template>
@@ -146,6 +152,7 @@
         loggedin: "",
         token: "",
         characters:[],
+        shadowamps: [],
         nameInput: "",
         createSTRinput: null,
         createAGLinput: null,
@@ -153,6 +160,14 @@
         createLOGinput: null,
         createCHAinput: null,
         createEDGinput: null,
+        characterID: null,
+        editnameInput: "",
+        editSTRinput: null,
+        editAGLinput: null,
+        editWILinput: null,
+        editLOGinput: null,
+        editCHAinput: null,
+        editEDGinput: null,
         // user:{
         //   username:"",
         //   password:""
@@ -193,6 +208,7 @@
             this.email = '',
             this.user= data,
             this.populateCharacters()
+            this.populateShadowamps()
           } else {
             alert('Incorrect Login')
           }
@@ -225,11 +241,13 @@
               "Content-Type": "application/json",
           }
         })
-        location.reload();
+        .then(() => {
+          this.populateCharacters()
+        })
       },
       editCharacter: function() {
         const character = {
-          name: this.editInput,
+          name: this.editnameInput,
           STR: this.editSTRinput,
           AGL: this.editAGLinput,
           WILL: this.editWILinput,
@@ -237,17 +255,19 @@
           CHA: this.editCHAinput,
           EDG: this.editEDGinput,
           // ShadowAmp: ["http://127.0.0.1:8000/shadowamps/2/"],
-          user: this.$URL +"users/"+"1"+"/"
+          // user: this.$URL +"users/"+"1"+"/"
         }
-        fetch(`${this.$URL}characters/`, {
-          method: "PATCH",
+        fetch(`${this.$URL}characters/${this.characterID}`, {
+          method: "PUT",
           body: JSON.stringify(character),
           headers: {
               "Authorization": `JWT ${this.token}`,
               "Content-Type": "application/json",
           }
         })
-        location.reload();
+        .then(() => {
+          this.populateCharacters()
+        })
       },
       deleteCharacter: function(id){
           // const token = this.$route.query.tokens
@@ -322,6 +342,33 @@
             // this.$emit(characters)
           } else {
             console.log("No characters found for this user. Create a new character?")
+          }
+        })
+      },
+      populateShadowamps: function(){
+        console.log(this.token)
+        fetch(`${this.$URL}shadowamps/`, {
+          method: "GET",
+          headers: {
+            "Authorization": `JWT ${this.token}`
+          }
+        })
+        .then((response) => {
+          console.log(response)
+          if (response.status != 200) {
+            response.status
+            console.log(response.status)
+          } else {
+            return response.json()
+          }
+        })
+        .then(data => {
+          if (data){
+            console.log("data: ", data)
+            this.shadowamps = data
+            // this.$emit(characters)
+          } else {
+            console.log("No shadowamps found for this user. Create a new shadowamp?")
           }
         })
       }
