@@ -90,8 +90,47 @@
       </b-modal>
     </section>
     <ul>
-      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ShadowAmps{{character.ShadowAmp.name}}</li>
+      <li v-for="character in characters" v-bind:key="character.id">Name:{{character.name}} STR:{{character.STR}} ID:{{character.id}}<button v-on:click="editCharacter()">Edit</button></li>
     </ul>
+    <div class="form">
+      <h1>New Character</h1>
+      <input type=text v-model="nameInput"/>
+
+
+      <input type=number STR=STR v-model="createSTRinput" placeholder="Strength"/>
+
+      <input type=number AGL=AGL v-model="createAGLinput" placeholder="Agility"/>
+
+      <input type=number WIL=WIL v-model="createWILinput" placeholder="Wisdom"/>
+
+      <input type=number LOG=LOG v-model="createLOGinput" placeholder="Logic"/>
+
+      <input type=number CHA=CHA v-model="createCHAinput" placeholder="Charisma"/>
+
+      <input type=number EDG=EDG v-model="createEDGinput" placeholder="Edge"/>
+
+      <button v-on:click="createCharacter()">Submit</button>
+    </div>
+    <div class="form">
+      <h1>Edit Character</h1>
+      <input type=text name=name v-model="editinput"/>
+
+      <input type=number STR=STR v-model="editSTRinput" placeholder="Strength"/>
+
+      <input type=number AGL=AGL v-model="editAGLinput" placeholder="Agility"/>
+
+      <input type=number WIL=WIL v-model="editWILinput" placeholder="Wisdom"/>
+
+      <input type=number LOG=LOG v-model="editLOGinput" placeholder="Logic"/>
+
+      <input type=number CHA=CHA v-model="editCHAinput" placeholder="Charisma"/>
+
+      <input type=number EDG=EDG v-model="editEDGinput" placeholder="Edge"/>
+
+      <!-- <select name="wand" id="editselect">
+      </select> -->
+      <button id="editbutton">Edit</button>
+  </div>
   </div>
 </template>
 
@@ -106,7 +145,18 @@
         password: "",
         loggedin: "",
         token: "",
-        characters:[]
+        characters:[],
+        nameInput: "",
+        createSTRinput: null,
+        createAGLinput: null,
+        createWILinput: null,
+        createLOGinput: null,
+        createCHAinput: null,
+        createEDGinput: null,
+        // user:{
+        //   username:"",
+        //   password:""
+        // }
         // listname: "",
         // listoflists: [],
       }
@@ -122,7 +172,6 @@
                 "Content-Type": "application/json",
             }
         })
-        // following code block courtesy of Narissa
         .then((response) => {
           if (response.status != 200) {
             response.status
@@ -141,7 +190,8 @@
             this.isComponentModalActive = false,
             this.firstname = '',
             this.lastname='',
-            this.email = ''
+            this.email = '',
+            this.user= data,
             this.populateCharacters()
           } else {
             alert('Incorrect Login')
@@ -154,6 +204,50 @@
         this.username = '',
         this.password = '',
         this.firstname = ''
+      },
+      createCharacter: function() {
+        const character = {
+          name: this.nameInput,
+          STR: this.createSTRinput,
+          AGL: this.createAGLinput,
+          WILL: this.createWILinput,
+          LOG: this.createLOGinput,
+          CHA: this.createCHAinput,
+          EDG: this.createEDGinput,
+          // ShadowAmp: ["http://127.0.0.1:8000/shadowamps/2/"],
+          user: this.$URL +"users/"+"1"+"/"
+        }
+        fetch(`${this.$URL}characters/`, {
+          method: "POST",
+          body: JSON.stringify(character),
+          headers: {
+              "Authorization": `JWT ${this.token}`,
+              "Content-Type": "application/json",
+          }
+        })
+        location.reload();
+      },
+      editCharacter: function() {
+        const character = {
+          name: this.editInput,
+          STR: this.editSTRinput,
+          AGL: this.editAGLinput,
+          WILL: this.editWILinput,
+          LOG: this.editLOGinput,
+          CHA: this.editCHAinput,
+          EDG: this.editEDGinput,
+          // ShadowAmp: ["http://127.0.0.1:8000/shadowamps/2/"],
+          user: this.$URL +"users/"+"1"+"/"
+        }
+        fetch(`${this.$URL}characters/`, {
+          method: "PATCH",
+          body: JSON.stringify(character),
+          headers: {
+              "Authorization": `JWT ${this.token}`,
+              "Content-Type": "application/json",
+          }
+        })
+        location.reload();
       },
       register: function() {
         const user = {
